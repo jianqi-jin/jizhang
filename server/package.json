@@ -10,6 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "egg-mysql": "^3.0.0",
+    "egg-passport": "^2.1.1",
+    "egg-view-nunjucks": "^2.3.0",
     "mysql": "^2.18.1"
   },
   "devDependencies": {
