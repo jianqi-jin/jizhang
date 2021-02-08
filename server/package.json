@@ -12,13 +12,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@baiducloud/sdk": "^1.0.0-rc.26",
     "egg-mysql": "^3.0.0",
     "egg-passport": "^2.1.1",
     "egg-scripts": "^2.13.0",
     "egg-view-assets": "^1.6.1",
     "egg-view-nunjucks": "^2.3.0",
     "koa-compress": "^5.0.1",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "egg": "^2.29.1",

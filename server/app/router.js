@@ -7,6 +7,10 @@ module.exports = app => {
     router.get('/interface/account/add', isLogin, controller.interface.account.add);
     router.get('/interface/account/edit', isLogin, controller.interface.account.edit);
     router.get('/interface/account/getDetail', isLogin, controller.interface.account.getDetail);
+    router.get('/interface/user/edit', isLogin, controller.interface.user.edit);
+    router.get('/interface/user/register', controller.interface.user.register);
     router.get('/interface/user/getUserInfo', isLogin, controller.interface.user.getUserInfo);
     router.get('/interface/user/login', controller.interface.user.login);
+    router.get('/interface/user/loginout', controller.interface.user.loginout);
+    router.get('/interface/bos/getBosToken', isLogin, controller.interface.bos.getBosToken);
 }

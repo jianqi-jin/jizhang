@@ -5,7 +5,7 @@ import elementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import App from './App.vue';
 import store from './store';
-
+import "regenerator-runtime/runtime";
 Vue.use(elementUI);
 window.vueInstance = {};
 

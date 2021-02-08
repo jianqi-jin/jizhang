@@ -12,6 +12,7 @@
 <script>
 import Navigator from '@/components/Navigator/Navigator.vue';
 import {mapActions} from 'vuex';
+
 export default {
     components: {
         Navigator
