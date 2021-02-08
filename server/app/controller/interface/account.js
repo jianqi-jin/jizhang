@@ -6,14 +6,26 @@ class DetailController extends Controller {
     const ctx = this.ctx;
     const {pn, rn} = ctx.query;
     const {userInfo} = ctx.session;
-    const detailList = await ctx.service.interface.account.getDetailList({
+    const {detailList, total} = await ctx.service.interface.account.getDetailList({
       userid: userInfo.userid,
       pn,
       rn
     });
     ctx.body = {
       code: 0,
-      data: detailList
+      data: detailList,
+      total: total
+    };
+  };
+  async getDetail() {
+    const ctx = this.ctx;
+    const {id} = ctx.query;
+    const detail = await ctx.service.interface.account.getDetail({
+      id
+    });
+    ctx.body = {
+      code: 0,
+      data: detail
     };
   };
   async add() {

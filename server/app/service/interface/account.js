@@ -1,17 +1,25 @@
 const Service = require('egg').Service;
 class AccountService extends Service {
     async getDetailList({pn = 0, rn = 10, userid}) {
-      const detailList = await this.app.mysql.select('account_detail', {
-        where: {userid},
-        orders: [['create_date','desc'], ['id','desc']], // 排序方式
-        limit: rn, // 返回数据量
-        offset: pn * rn, // 数据偏移量
+      const count = await this.app.mysql.query('select count(*) as total from account_detail where userid = ?', userid);
+      const total = count?.[0]?.total || 0;
+      let detailList = await this.app.mysql.query('select * from account_detail where userid = ? order by create_date desc, id desc limit ? offset ?',
+      [userid, Math.max(rn, 0), Math.max(pn * rn, 0)]);
+      detailList = detailList.map(v => {
+        v.create_date = new Date(v.create_date).getTime();
+        v.update_date = new Date(v.update_date).getTime();
+        return v;
+      });
+      return {
+        detailList,
+        total
+      }
+    };
+    async getDetail({id}) {
+      const detail = await this.app.mysql.get('account_detail', {
+        id
     });
-    return detailList.map(v => {
-      v.create_date = new Date(v.create_date).getTime();
-      v.update_date = new Date(v.update_date).getTime();
-      return v;
-    })
+    return detail;
   };
     async add({
       userid,

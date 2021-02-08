@@ -6,6 +6,7 @@ module.exports = app => {
     router.get('/interface/account/getDetailList', isLogin, controller.interface.account.getDetailList);
     router.get('/interface/account/add', isLogin, controller.interface.account.add);
     router.get('/interface/account/edit', isLogin, controller.interface.account.edit);
+    router.get('/interface/account/getDetail', isLogin, controller.interface.account.getDetail);
     router.get('/interface/user/getUserInfo', isLogin, controller.interface.user.getUserInfo);
     router.get('/interface/user/login', controller.interface.user.login);
 }

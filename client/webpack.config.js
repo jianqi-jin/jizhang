@@ -13,7 +13,8 @@ module.exports = {
     },
     resolve: {
         alias: {
-            vue$: 'vue/dist/vue.esm.js'
+            vue$: 'vue/dist/vue.esm.js',
+            '@': path.resolve(__dirname, 'src')
         }
     },
     module: {
@@ -34,14 +35,16 @@ module.exports = {
                 test: /\.css$/,
                 use: [
                     'vue-style-loader',
+                    'style-loader',
                     'css-loader'
                 ]
             }, {
                 test: /\.styl(us)?$/,
                 use: [
-                  'vue-style-loader',
-                  'css-loader',
-                  'stylus-loader'
+                    'vue-style-loader',
+                    'style-loader',
+                    'css-loader',
+                    'stylus-loader'
                 ]
             }, {
                 test: /\.(png|jpg|gif)$/i,
