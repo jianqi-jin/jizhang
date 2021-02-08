@@ -4,6 +4,7 @@ import AccountList from '@/components/AccountList/AccountList.vue';
 import Account from '@/components/Account/Account.vue';
 import UserCenter from '@/components/UserCenter/UserCenter.vue';
 import UserLogin from '@/components/UserLogin/UserLogin.vue';
+import UserEdit from '@/components/UserEdit/UserEdit.vue';
 import User from '@/components/User/User.vue';
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -30,6 +31,9 @@ const router = new VueRouter({
         }, {
             path: '/user/login',
             component: UserLogin
+        }, {
+            path: '/user/edit',
+            component: UserEdit
         }, {
             path: '/user',
             redirect: '/user/center'

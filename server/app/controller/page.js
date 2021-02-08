@@ -2,7 +2,8 @@ const Controller = require('egg').Controller;
 
 class HomeController extends Controller {
     async index() {
-        this.ctx.body = 'Hello worldasd';
+        const ctx = this.ctx;
+        await ctx.render('jizhang/index.tpl');
     }
 }
 

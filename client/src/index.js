@@ -16,7 +16,6 @@ window.vueInstance = new Vue({
 }).$mount('#root');
 
 router.afterEach((to, from) => {
-    console.log(to);
     if (/(user\/center|account)/i.test(to.path)) {
         store.dispatch('checkLogin');
     }

@@ -3,7 +3,6 @@
     <el-menu
         default-active="/user/center"
         class="el-menu-vertical-demo"
-        @select="handleSelect"
         router
         background-color="#545c64"
         text-color="#fff"
@@ -36,11 +35,6 @@
 
 <script>
     export default {
-        methods: {
-            handleSelect(key, keyPath) {
-                console.log(key, keyPath);
-            }
-        }
     }
 </script>
 

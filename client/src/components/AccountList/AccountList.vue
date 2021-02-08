@@ -85,9 +85,7 @@ export default {
     },
     watch: {
         pn: {
-            immediate: true,
             handler(v) {
-                console.log(v);
                 this.getAccountDetailList({
                     pn: v - 1,
                     rn: 10

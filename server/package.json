@@ -5,14 +5,19 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "egg-bin dev"
+    "dev": "egg-bin dev",
+    "start": "egg-scripts start --daemon",
+    "stop": "egg-scripts stop"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "egg-mysql": "^3.0.0",
     "egg-passport": "^2.1.1",
+    "egg-scripts": "^2.13.0",
+    "egg-view-assets": "^1.6.1",
     "egg-view-nunjucks": "^2.3.0",
+    "koa-compress": "^5.0.1",
     "mysql": "^2.18.1"
   },
   "devDependencies": {

@@ -40,7 +40,6 @@ class DetailController extends Controller {
         channel,
         detail
       });
-      console.log(res);
       if (res.affectedRows === 1) {
         return ctx.body = {
           code: 0

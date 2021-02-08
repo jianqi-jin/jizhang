@@ -2,14 +2,17 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {VueLoaderPlugin} = require('vue-loader');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const path = require('path');
+const namespace = 'jizhang';
+const dev = process.env.NODE_ENV === 'development';
 module.exports = {
     entry: {
         app: './src/index.js'
     },
     target: 'web',
     output: {
-        filename: '[name].[contenthash].js',
-        path: path.join(__dirname, 'dist')
+        filename: `public/${namespace}/js/[name].[contenthash].js`,
+        path: path.join(__dirname, 'dist'),
+        publicPath: '/'
     },
     resolve: {
         alias: {
@@ -17,6 +20,7 @@ module.exports = {
             '@': path.resolve(__dirname, 'src')
         }
     },
+    mode: process.env.NODE_ENV,
     module: {
         rules: [
             {
@@ -53,6 +57,7 @@ module.exports = {
                         loader: 'url-loader',
                         options: {
                             limit: 8192,
+                            name: `public/${namespace}/img/[name].[contenthash].[ext]`
                         },
                     },
                 ],
@@ -63,6 +68,7 @@ module.exports = {
                         loader: 'url-loader',
                         options: {
                             limit: 8192,
+                            name: `public/${namespace}/font/[name].[contenthash].[ext]`
                         },
                     },
                 ],
@@ -76,6 +82,7 @@ module.exports = {
         port: 9000,
         hot: true,
         open: true,
+        openPage: 'view/jizhang/index.html',
         proxy: {
             '/interface': 'http://106.12.173.158:7001'
         }
@@ -84,7 +91,13 @@ module.exports = {
         new VueLoaderPlugin(),
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
-            template: './src/index.html'
+            template: './src/index.tpl',
+            filename: `view/${namespace}/index.${dev ? 'html' : 'tpl'}`
         })
-    ]
+    ],
+    optimization: {
+        runtimeChunk: {
+            name: entry => `runtime~${entry.name}`
+        }
+    }
 }

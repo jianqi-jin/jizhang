@@ -1,7 +1,7 @@
 module.exports = app => {
     const {router, controller, middleware} = app;
     const isLogin = middleware.isLogin();
-    // router.get('/', controller.home.index);
+    router.get('/', controller.page.index);
     // router.get('/news', controller.news.list);
     router.get('/interface/account/getDetailList', isLogin, controller.interface.account.getDetailList);
     router.get('/interface/account/add', isLogin, controller.interface.account.add);
