@@ -4,6 +4,7 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const path = require('path');
 const namespace = 'jizhang';
 const dev = process.env.NODE_ENV === 'development';
+const cndPrefix = dev ? '/' : 'http://jizhang.cdn.bcebos.com/'; // '/'
 module.exports = {
     entry: {
         app: './src/index.js'
@@ -12,7 +13,7 @@ module.exports = {
     output: {
         filename: `public/${namespace}/js/[name].[contenthash].js`,
         path: path.join(__dirname, 'dist'),
-        publicPath: '/'
+        publicPath: cndPrefix
     },
     resolve: {
         alias: {

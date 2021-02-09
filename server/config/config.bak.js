@@ -13,7 +13,7 @@ module.exports = appInfo => ({
   },
   middleware: ['compress'],
   compress: {
-    threshold: 0,
+    threshold: 2048,
     match() {
       return true;
     },
