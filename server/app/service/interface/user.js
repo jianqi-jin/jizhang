@@ -22,19 +22,28 @@ class UserService extends Service {
         };
       }
       const userid = UUID.v1();
-      const {affectedRows} = await this.app.mysql.insert('user', {username, password, userid})
+      const {affectedRows} = await this.app.mysql.insert('user', {username, password, userid});
       if (affectedRows !== 1) {
         return {
           code: -1,
           msg: '插入失败~'
         };
       }
-      return {
-        code: 0
-      };
     };
     async update({id, nickname, avatarurl, detail}) {
       return await this.app.mysql.update('user', {id, nickname, avatarurl, detail});
+    };
+    async updateAmount() {
+      const {userid, id} = this.ctx.session.userInfo || {};
+      const result = await this.app.mysql.beginTransactionScope(async conn => {
+        const res = await conn.query('select sum(price) as amount from account_detail where userid=?', [userid]);
+        await conn.update('user', {id, amount: res[0].amount});
+      }, this.ctx);
+      return {
+        code: 0,
+        msg: ''
+      };
+      // return await this.app.mysql.update('user', {id, amount});
     };
 }
 module.exports = UserService;

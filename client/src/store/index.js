@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex'
 import {login, getUserInfo, getAccountDetailList} from '@/request/request';
+import router from '../router';
 
 Vue.use(Vuex);
 
@@ -52,18 +53,21 @@ const store = {
                 vueInstance.$router.go(-1);
             });
         },
-        checkLogin: ({commit, getters}) => {
+        checkLogin: ({dispatch, getters}) => {
             if (getters.isLogin) {
                 return;
             }
+            dispatch('getUserInfo');
+        },
+        getUserInfo: ({commit}) => {
             getUserInfo().then(({code, msg, data}) => {
                 if (code === 0) {
                     commit('setUserInfo', data);
                 }
                 else {
-                    vueInstance.$router.push('/user/login');
+                    router.push('/user/login');
                 }
-            })
+            });
         },
         getAccountDetailList({commit, getters}, {
             pn = 0,

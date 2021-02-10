@@ -1,8 +1,15 @@
 import axios from 'axios';
+import router from '../router';
 
 const request =
     (url, option) => axios(url, option)
-        .then(res => res.data);
+        .then(res => {
+            const data = res.data;
+            if (data.code === 1001) {
+                router.push('/user/login');
+            }
+            return data;
+        });
 
 export const getUserInfo =
     () => request('/interface/user/getUserInfo')
@@ -37,5 +44,9 @@ export const editAccountDetail = params => request('/interface/account/edit', {
 export const editUserInfo = params => request('/interface/user/edit', {params});
 export const loginOut = () => request('/interface/user/loginout');
 export const getBosToken = params => request('/interface/bos/getBosToken', {
+    params
+});
+export const getChartList = () => request('/interface/account/getChartList');
+export const deleteDetail = params => request('/interface/account/delete', {
     params
 });

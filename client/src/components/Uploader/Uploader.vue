@@ -51,7 +51,7 @@ export default {
             const client = new baidubce.sdk.BosClient(bosConfig);
             try {
                 await client.putObjectFromBlob('jizhang', bosToken.key, file);
-                this.$emit('input', `https://jizhang.cdn.bcebos.com/${bosToken.key}`);
+                this.$emit('input', `https://jizhang.bj.bcebos.com/${bosToken.key}`);
             }
             catch (e) {
                 this.$message.error('图片上传失败~');

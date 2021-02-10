@@ -21,12 +21,6 @@ export default {
         return {
             msg: 'msg'
         }
-    },
-    mounted() {
-        this.checkLogin();
-    },
-    methods: {
-        ...mapActions(['checkLogin'])
     }
 }
 </script>

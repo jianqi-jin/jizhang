@@ -33,22 +33,13 @@ class DetailController extends Controller {
     const {name, price, channel, detail} = ctx.query;
     const {userInfo} = ctx.session;
     try {
-      const res = await ctx.service.interface.account.add({
+      return ctx.body = await ctx.service.interface.account.add({
         userid: userInfo.userid,
         name,
         price,
         channel,
         detail
       });
-      if (res.affectedRows === 1) {
-        return ctx.body = {
-          code: 0
-        };
-      }
-      ctx.body = {
-        code: -1,
-        msg: res.message || '添加失败'
-      }
     }
     catch (e) {
       return ctx.body = {
@@ -57,12 +48,21 @@ class DetailController extends Controller {
       };
     }
   };
+  async delete() {
+    const {id} = this.ctx.query;
+    this.ctx.body = await this.ctx.service.interface.account.delete({id});
+  }
+  async getChartList() {
+    const ctx = this.ctx;
+    const {start, end} = ctx.query;
+    ctx.body = await ctx.service.interface.account.getChartList({start, end});
+  }
   async edit() {
     const ctx = this.ctx;
     const {name, price, channel, detail, id} = ctx.query;
     const {userInfo} = ctx.session;
     try {
-      const res = await ctx.service.interface.account.edit({
+      return ctx.body = await ctx.service.interface.account.edit({
         id,
         userid: userInfo.userid,
         name,
@@ -70,17 +70,9 @@ class DetailController extends Controller {
         channel,
         detail
       });
-      if (res.affectedRows === 1) {
-        return ctx.body = {
-          code: 0
-        };
-      }
-      ctx.body = {
-        code: -1,
-        msg: res.message || '更改失败'
-      }
     }
     catch (e) {
+      console.log(e);
       return ctx.body = {
         code: 15,
         msg: e?.sqlMessage || '更改失败'

@@ -48,8 +48,7 @@ export default {
                     })
                     this.$router.go(-1);
                 });
-        },
-        ...mapActions(['checkLogin'])
+        }
     }
 }
 </script>

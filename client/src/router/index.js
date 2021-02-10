@@ -8,7 +8,14 @@ import UserRegister from '@/components/UserRegister/UserRegister.vue';
 import UserEdit from '@/components/UserEdit/UserEdit.vue';
 import User from '@/components/User/User.vue';
 import VueRouter from 'vue-router';
+
+const originPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+    return originPush.call(this, location).catch(err => err);
+};
+
 Vue.use(VueRouter);
+
 const router = new VueRouter({
     routes: [{
         path: '/account',

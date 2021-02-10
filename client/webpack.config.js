@@ -4,7 +4,7 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const path = require('path');
 const namespace = 'jizhang';
 const dev = process.env.NODE_ENV === 'development';
-const cndPrefix = dev ? '/' : 'http://jizhang.cdn.bcebos.com/'; // '/'
+const cndPrefix = dev ? '/' : 'http://concat-static.cdn.bcebos.com/'; // 'http://concat-static.bj.bcebos.com/'
 module.exports = {
     entry: {
         app: './src/index.js'

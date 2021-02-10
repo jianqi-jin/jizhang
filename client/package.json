@@ -32,6 +32,7 @@
   "dependencies": {
     "@baiducloud/sdk": "^1.0.0-rc.26",
     "axios": "^0.21.1",
+    "echarts": "^5.0.2",
     "element-ui": "^2.15.0",
     "regenerator-runtime": "^0.13.7",
     "vue": "^2.6.12",

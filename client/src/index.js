@@ -9,14 +9,20 @@ import "regenerator-runtime/runtime";
 Vue.use(elementUI);
 window.vueInstance = {};
 
+
+router.afterEach((to, from, next) => {
+    if (/\/user\/login/.test(to.path)) {
+        return;
+    }
+    if (/(user\/center|account)/i.test(to.path)) {
+        store.dispatch('checkLogin', {next, to});
+    }
+});
+
 window.vueInstance = new Vue({
     store,
     router,
     render: h => h(App)
 }).$mount('#root');
 
-router.afterEach((to, from) => {
-    if (/(user\/center|account)/i.test(to.path)) {
-        store.dispatch('checkLogin');
-    }
-});
+

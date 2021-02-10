@@ -40,6 +40,7 @@
             width="180">
             <template slot-scope="scope">
                 <el-button size="mini" @click="editDetail(scope.row)">编辑</el-button>
+                <el-button size="mini" type="danger" @click="deleteDetail(scope.row)">删除</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -56,6 +57,7 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
+import {deleteDetail} from '@/request/request';
 export default {
     data() {
         return {
@@ -81,6 +83,17 @@ export default {
         },
         editDetail(item) {
             this.$router.push(`/account/detail?id=${item.id}`);
+        },
+        async deleteDetail({id}) {
+            let {code, msg} = await deleteDetail({id});
+            if (code !== 0) {
+                return this.$message.error(msg);
+            }
+            this.$message({
+                type: 'success',
+                message: '删除成功'
+            });
+            this.getAccountDetailList({pn: this.pn - 1, rn: 10});
         }
     },
     watch: {
