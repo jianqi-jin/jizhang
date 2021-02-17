@@ -6,6 +6,5 @@ mkdir dist
 mkdir output
 npm i
 npm run build
-tar -zvcf 
 tar -zvcf $TAR ./dist
 mv $TAR ./output
