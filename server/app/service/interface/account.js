@@ -157,9 +157,7 @@ class AccountService extends Service {
           id
         });
         if (affectedRows === 1) {
-          return {
-            code: 0
-          }
+          return await this.ctx.service.interface.user.updateAmount();
         }
         else {
           return {

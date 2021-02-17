@@ -32,7 +32,7 @@
         <el-button class="btn" type="primary" @click="toEdit">编辑个人资料</el-button>
     </div>
     <div class="amount-content">
-        <div class="amount-box">
+        <div class="amount-box" @click="activeType = '-1'">
             <div class="amount-title">全部资产</div>
             <div class="amount-value-content">
                 <span class="amount-value">
@@ -40,20 +40,20 @@
                 </span>元
             </div>
         </div>
-        <div class="amount-box">
+        <div class="amount-box" @click="activeType = '0'">
             <div class="amount-title">移动资产</div>
             <div class="amount-value-content">
                 <span class="amount-value">{{userInfo.amount}}</span>元
             </div>
         </div>
-        <div class="amount-box">
+        <div class="amount-box" @click="activeType = '1'">
             <div class="amount-title">固定资产</div>
             <div class="amount-value-content">
                 <span class="amount-value">{{userInfo.fixed_amount}}</span>元
             </div>
         </div>
     </div>
-    <el-tabs v-model="activeType" @tab-click="getChartList">
+    <el-tabs v-model="activeType">
         <el-tab-pane label="全部资产" name="-1"></el-tab-pane>
         <el-tab-pane label="流动资产" name="0"></el-tab-pane>
         <el-tab-pane label="固定资产" name="1"></el-tab-pane>
@@ -78,6 +78,14 @@ export default {
     computed: {
         ...mapGetters(['userInfo'])
     },
+    watch: {
+        activeType: {
+            immediate: true,
+            handler(v) {
+                this.getChartList();
+            }
+        }
+    },
     methods: {
         round,
         ...mapActions(['getUserInfo']),
@@ -93,6 +101,7 @@ export default {
             if (code !== 0) {
                 return this.$message.error(msg);
             }
+            data.list = data.list.filter(v => !v.data || v.data.length > 0);
             this.legend = data.list.map(v => v.channel);
             this.series = data.list.map(v => ({
                 name: v.channel,
@@ -140,7 +149,7 @@ export default {
                 },
                 series: this.series
             };
-            this.chart.setOption(this.option);
+            this.chart.setOption(this.option, true);
         },
         chartResize() {
             this.chart.resize && this.chart.resize();

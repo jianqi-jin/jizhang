@@ -88,7 +88,7 @@ export default {
                     if (v.enable) {
                         return v.label;
                     }
-                })
+                }).filter(v => v);
             });
         },
         submit() {

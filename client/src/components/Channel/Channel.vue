@@ -16,7 +16,7 @@
             label="标题"
         >
             <template slot-scope="scope">
-                <el-input v-model="scope.row.label"></el-input>
+                <el-input @blur="edit(scope.row)" v-model="scope.row.label"></el-input>
             </template>
         </el-table-column>
         <el-table-column
@@ -24,7 +24,7 @@
             label="启用"
         >
             <template slot-scope="scope">
-                <el-switch v-model="scope.row.enable"></el-switch>
+                <el-switch @change="edit(scope.row)" v-model="scope.row.enable"></el-switch>
             </template>
         </el-table-column>
         <el-table-column
@@ -36,7 +36,6 @@
             label="操作"
         >
         <template slot-scope="scope">
-            <el-button size="mini" @click="edit(scope.row)">编辑</el-button>
             <el-button type="danger" size="mini" @click="deleteChannel(scope.row)">删除</el-button>
         </template>
         </el-table-column>
@@ -84,8 +83,17 @@ export default {
                 this.getChannelList();
             });
         },
-        submitAdd() {
-            addChannel(this.currentItem);
+        async submitAdd() {
+            let res = await addChannel(this.currentItem);
+            if (res.code !== 0) {
+                return this.$message.error(res.msg || '添加失败');
+            }
+            this.$message({
+                type: 'success',
+                message: '添加成功~'
+            })
+            this.dialogVisible = false;
+            this.getChannelList();
         },
         edit(item) {
             item.enable = +item.enable;
@@ -93,10 +101,6 @@ export default {
                 if (res.code !== 0) {
                     return this.$message.error('更新失败');
                 }
-                this.$message({
-                    type: 'success',
-                    message: '更新成功'
-                })
                 this.getChannelList();
             });
         },
@@ -105,6 +109,7 @@ export default {
             getChannelList().then(res => {
                 this.channelList = res.data.map(v => {
                     v.enable = !!v.enable;
+                    v.create_date = new Date(v.create_date).toLocaleString();
                     return v;
                 });
             })
