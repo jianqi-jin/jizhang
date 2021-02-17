@@ -31,7 +31,7 @@ class DetailController extends Controller {
   };
   async add() {
     const ctx = this.ctx;
-    const {name, price, channel, detail} = ctx.query;
+    const {name, price, channel, detail, type, from} = ctx.query;
     const {userInfo} = ctx.session;
     try {
       return ctx.body = await ctx.service.interface.account.add({
@@ -39,7 +39,9 @@ class DetailController extends Controller {
         name,
         price,
         channel,
-        detail
+        detail,
+        type,
+        from
       });
     }
     catch (e) {

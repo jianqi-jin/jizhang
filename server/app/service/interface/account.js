@@ -130,14 +130,18 @@ class AccountService extends Service {
       name,
       price,
       channel,
-      detail
+      detail,
+      type,
+      from
     }) {
       let {affectedRows, message} = await this.app.mysql.insert('account_detail', {
         userid,
         name,
         price,
         channel,
-        detail
+        detail,
+        type,
+        from
       });
       if (affectedRows !== 1) {
         return ctx.body = {
