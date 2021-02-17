@@ -36,8 +36,26 @@ class UserService extends Service {
     async updateAmount() {
       const {userid, id} = this.ctx.session.userInfo || {};
       const result = await this.app.mysql.beginTransactionScope(async conn => {
-        const res = await conn.query('select sum(price) as amount from account_detail where userid=?', [userid]);
-        await conn.update('user', {id, amount: res[0].amount});
+        const res = await conn.query('select price, type, `from` from account_detail where userid=?', [userid]);
+        let amount = 0;
+        let fixed_amount = 0;
+        res.map(v => {
+          switch (v.from) {
+            case 0:
+              amount -= v.price;
+              break;
+            case 1:
+              fixed_amount -= v.price;
+          }
+          switch (v.type) {
+            case 0:
+              amount += v.price;
+              break;
+            case 1:
+              fixed_amount += v.price;
+          }
+        });
+        await conn.update('user', {id, amount, fixed_amount});
       }, this.ctx);
       return {
         code: 0,

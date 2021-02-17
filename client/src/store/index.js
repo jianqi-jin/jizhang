@@ -71,12 +71,14 @@ const store = {
         },
         getAccountDetailList({commit, getters}, {
             pn = 0,
-            rn = 10
+            rn = 10,
+            type
         } = {}) {
             commit('requestStart');
             getAccountDetailList({
                 pn,
-                rn
+                rn,
+                type: +type
             }).then(({code, msg, data, total}) => {
                 if (code !== 0) {
                     return vueInstance.$message.error(msg);

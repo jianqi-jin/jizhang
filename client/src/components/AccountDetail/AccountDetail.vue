@@ -20,6 +20,26 @@
                 ></el-option>
             </el-select>
         </el-form-item>
+        <el-form-item label="类别">
+            <el-select v-model="form.type" filterable placeholder="请选择类别">
+                <el-option
+                    v-for="(item, index) in typeOptions"
+                    :key="index"
+                    :label="item.label"
+                    :value="item.value"
+                ></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="来源">
+            <el-select v-model="form.from" filterable placeholder="请选择来源">
+                <el-option
+                    v-for="(item, index) in fromOptions"
+                    :key="index"
+                    :label="item.label"
+                    :value="item.value"
+                ></el-option>
+            </el-select>
+        </el-form-item>
         <el-form-item label="detail">
             <el-input type="textarea" placeholder="输入其他附加信息" v-model="form.detail"></el-input>
         </el-form-item>
@@ -29,25 +49,22 @@
 </template>
 
 <script>
-import {getAccountDetail, addAccountDetail, editAccountDetail} from '@/request/request';
+import {channelOptions, typeOptions, fromOptions} from '@/constant/account';
+import {getAccountDetail, addAccountDetail, getChannelList, editAccountDetail} from '@/request/request';
 export default {
     data() {
         return {
             form: {},
             loading: false,
-            channelOptions: [
-                '基金',
-                '黄金',
-                '理财',
-                '花呗',
-                '备用金',
-                '购物',
-                '吃饭',
-                '通勤',
-                '娱乐',
-                '支出',
-                '其他'
-            ]
+            channelOptions: [],
+            typeOptions: typeOptions.map((v, i) => ({
+                label: v,
+                value: i
+            })),
+            fromOptions: fromOptions.map((v, i) => ({
+                label: v,
+                value: i
+            }))
         }
     },
     computed: {
@@ -62,6 +79,18 @@ export default {
         }
     },
     methods: {
+        getChannel() {
+            getChannelList().then(res => {
+                if (res.code !== 0) {
+                    return this.channelOptions = channelOptions;
+                }
+                this.channelOptions = res.data.map(v => {
+                    if (v.enable) {
+                        return v.label;
+                    }
+                })
+            });
+        },
         submit() {
             let submitDetail = null;
             if (this.isEdit) {
@@ -86,6 +115,7 @@ export default {
         }
     },
     mounted() {
+        this.getChannel();
         if (this.isEdit) {
             getAccountDetail(this.id).then(({code, msg, data}) => {
                 if (code !== 0) {

@@ -46,7 +46,17 @@ export const loginOut = () => request('/interface/user/loginout');
 export const getBosToken = params => request('/interface/bos/getBosToken', {
     params
 });
-export const getChartList = () => request('/interface/account/getChartList');
+export const getChartList = params => request('/interface/account/getChartList', {params});
 export const deleteDetail = params => request('/interface/account/delete', {
+    params
+});
+export const getChannelList = () => request('/interface/channel/getList');
+export const addChannel = params => request('/interface/channel/add', {
+    params
+});
+export const editChannel = params => request('/interface/channel/edit', {
+    params
+});
+export const deleteChannel = params => request('/interface/channel/delete', {
     params
 });

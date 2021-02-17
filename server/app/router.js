@@ -12,6 +12,10 @@ module.exports = app => {
     router.get('/interface/user/edit', isLogin, controller.interface.user.edit);
     router.get('/interface/user/register', controller.interface.user.register);
     router.get('/interface/user/getUserInfo', isLogin, controller.interface.user.getUserInfo);
+    router.get('/interface/channel/getList', isLogin, controller.interface.channel.getList);
+    router.get('/interface/channel/edit', isLogin, controller.interface.channel.edit);
+    router.get('/interface/channel/delete', isLogin, controller.interface.channel.delete);
+    router.get('/interface/channel/add', isLogin, controller.interface.channel.add);
     router.get('/interface/user/login', controller.interface.user.login);
     router.get('/interface/user/loginout', controller.interface.user.loginout);
     router.get('/interface/bos/getBosToken', isLogin, controller.interface.bos.getBosToken);

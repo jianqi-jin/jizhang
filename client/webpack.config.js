@@ -58,7 +58,7 @@ module.exports = {
                         loader: 'url-loader',
                         options: {
                             limit: 8192,
-                            name: `public/${namespace}/img/[name].[contenthash].[ext]`
+                            name: `public/${namespace}/img/[name].[ext]`
                         },
                     },
                 ],
@@ -69,7 +69,7 @@ module.exports = {
                         loader: 'url-loader',
                         options: {
                             limit: 8192,
-                            name: `public/${namespace}/font/[name].[contenthash].[ext]`
+                            name: `public/${namespace}/font/[name].[ext]`
                         },
                     },
                 ],

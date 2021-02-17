@@ -13,6 +13,7 @@
                 <span>账号</span>
             </template>
             <el-menu-item index="/user/center">个人中心</el-menu-item>
+            <el-menu-item index="/user/channel">渠道设置</el-menu-item>
         </el-submenu>
         <el-submenu index="2">
             <template slot="title">

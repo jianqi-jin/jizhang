@@ -4,12 +4,13 @@ const Controller = require('egg').Controller;
 class DetailController extends Controller {
   async getDetailList() {
     const ctx = this.ctx;
-    const {pn, rn} = ctx.query;
+    const {pn, rn, type} = ctx.query;
     const {userInfo} = ctx.session;
     const {detailList, total} = await ctx.service.interface.account.getDetailList({
       userid: userInfo.userid,
       pn,
-      rn
+      rn,
+      type: +type
     });
     ctx.body = {
       code: 0,
@@ -54,12 +55,12 @@ class DetailController extends Controller {
   }
   async getChartList() {
     const ctx = this.ctx;
-    const {start, end} = ctx.query;
-    ctx.body = await ctx.service.interface.account.getChartList({start, end});
+    const {start, end, type} = ctx.query;
+    ctx.body = await ctx.service.interface.account.getChartList({start, end, type: +type});
   }
   async edit() {
     const ctx = this.ctx;
-    const {name, price, channel, detail, id} = ctx.query;
+    const {name, price, channel, detail, id, type, from = 2} = ctx.query;
     const {userInfo} = ctx.session;
     try {
       return ctx.body = await ctx.service.interface.account.edit({
@@ -68,7 +69,9 @@ class DetailController extends Controller {
         name,
         price,
         channel,
-        detail
+        detail,
+        type,
+        from
       });
     }
     catch (e) {

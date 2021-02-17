@@ -1,11 +1,12 @@
-const CHART_MAX_DAY = 365;
+const CHART_MAX_DAY = 3650;
 const Service = require('egg').Service;
 class AccountService extends Service {
-    async getDetailList({pn = 0, rn = 10, userid}) {
-      const count = await this.app.mysql.query('select count(*) as total from account_detail where userid = ?', userid);
+    async getDetailList({pn = 0, rn = 10, userid, type = -1}) {
+      const types = type === 0 || type === 1 ? [type] : [0, 1];
+      const count = await this.app.mysql.query('select count(*) as total from account_detail where userid = ? and type in (?)', [userid, types]);
       const total = count?.[0]?.total || 0;
-      let detailList = await this.app.mysql.query('select * from account_detail where userid = ? order by create_date desc, id desc limit ? offset ?',
-      [userid, Math.max(rn, 0), Math.max(pn * rn, 0)]);
+      let detailList = await this.app.mysql.query('select * from account_detail where userid = ? and type in (?) order by create_date desc, id desc limit ? offset ?',
+      [userid, types, Math.max(rn, 0), Math.max(pn * rn, 0)]);
       detailList = detailList.map(v => {
         v.create_date = new Date(v.create_date).getTime();
         v.update_date = new Date(v.update_date).getTime();
@@ -16,7 +17,7 @@ class AccountService extends Service {
         total
       }
     };
-    async getChartList({start, end} = {}) {
+    async getChartList({start, end, type = -1} = {}) {
       try {
         const dayTime = 1e3 * 60 * 60 * 24;
         start = +start || new Date(this.ctx.session?.userInfo?.date).getTime();
@@ -28,7 +29,7 @@ class AccountService extends Service {
         // 结束日期加一
         const {userid} = this.ctx.session?.userInfo || {};
         const rows = await this.app.mysql.query(
-          'select channel, price, create_date from account_detail where create_date>? and create_date<? and userid=? order by create_date asc',
+          'select channel, price, type, `from`, create_date from account_detail where create_date>? and create_date<? and userid=? order by create_date asc',
           [new Date(+start), new Date(+end), userid]
         );
         const resArr = [];
@@ -43,10 +44,34 @@ class AccountService extends Service {
           }
           // 追加
           const cur = resArr.find(val => val.channel === v.channel);
-          cur.data.push({
-            price: v.price,
-            time: new Date(v.create_date).getTime()
-          });
+          if (type === v.type) {
+            cur.data.push({
+              price: v.price,
+              time: new Date(v.create_date).getTime()
+            });
+          }
+          if (type === v.from) {
+            cur.data.push({
+              price: -v.price,
+              time: new Date(v.create_date).getTime()
+            });
+          }
+          if (type === -1) {
+            if (v.price < 0) {
+              // 流出
+              cur.data.push({
+                price: v.price,
+                time: new Date(v.create_date).getTime()
+              });
+            }
+            else if(v.from === 2) { // 2为外界流入
+              // 流入
+              cur.data.push({
+                price: v.price,
+                time: new Date(v.create_date).getTime()
+              });
+            }
+          }
         });
         const splitToEveryDay = (start, end, dataList) => {
           let i = 0;
@@ -151,17 +176,21 @@ class AccountService extends Service {
       name,
       price,
       channel,
-      detail
+      detail,
+      type,
+      from
     }) {
       let {affectedRows, message} = await this.app.mysql.update('account_detail', {
         id,
         name,
         price,
         channel,
-        detail
+        detail,
+        type,
+        from
       });
       if (affectedRows !== 1) {
-        return ctx.body = {
+        return this.ctx.body = {
           code: -1,
           msg: message
         };

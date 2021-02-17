@@ -6,6 +6,7 @@ import UserCenter from '@/components/UserCenter/UserCenter.vue';
 import UserLogin from '@/components/UserLogin/UserLogin.vue';
 import UserRegister from '@/components/UserRegister/UserRegister.vue';
 import UserEdit from '@/components/UserEdit/UserEdit.vue';
+import Channel from '@/components/Channel/Channel.vue';
 import User from '@/components/User/User.vue';
 import VueRouter from 'vue-router';
 
@@ -46,9 +47,14 @@ const router = new VueRouter({
             path: '/user/edit',
             component: UserEdit
         }, {
+            path: '/user/channel',
+            component: Channel
+        }, {
             path: '/user',
             redirect: '/user/center'
         }]
+    }, {
+        path: '/',
     }, {
         path: '/',
         redirect: '/user'

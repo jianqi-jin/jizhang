@@ -16,8 +16,8 @@
             <el-col :span="16">{{userInfo.username}}</el-col>
         </el-row>
         <el-row>
-            <el-col :span="8">余额</el-col>
-            <el-col :span="16">{{userInfo.amount}}</el-col>
+            <el-col :span="8">全部资产</el-col>
+            <el-col :span="16">{{round(userInfo.amount + userInfo.fixed_amount)}}</el-col>
         </el-row>
         <el-row>
             <el-col :span="8">简介</el-col>
@@ -29,8 +29,35 @@
         </el-row>
     </div>
     <div class="btn-bar">
-        <el-button class="btn" type="primary" @click="toEdit">编辑</el-button>
+        <el-button class="btn" type="primary" @click="toEdit">编辑个人资料</el-button>
     </div>
+    <div class="amount-content">
+        <div class="amount-box">
+            <div class="amount-title">全部资产</div>
+            <div class="amount-value-content">
+                <span class="amount-value">
+                    {{round(userInfo.amount + userInfo.fixed_amount)}}
+                </span>元
+            </div>
+        </div>
+        <div class="amount-box">
+            <div class="amount-title">移动资产</div>
+            <div class="amount-value-content">
+                <span class="amount-value">{{userInfo.amount}}</span>元
+            </div>
+        </div>
+        <div class="amount-box">
+            <div class="amount-title">固定资产</div>
+            <div class="amount-value-content">
+                <span class="amount-value">{{userInfo.fixed_amount}}</span>元
+            </div>
+        </div>
+    </div>
+    <el-tabs v-model="activeType" @tab-click="getChartList">
+        <el-tab-pane label="全部资产" name="-1"></el-tab-pane>
+        <el-tab-pane label="流动资产" name="0"></el-tab-pane>
+        <el-tab-pane label="固定资产" name="1"></el-tab-pane>
+    </el-tabs>
     <div id="echart" class="chart-contain"></div>
 </div>
 </template>
@@ -38,18 +65,21 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import * as echart from 'echarts';
+import {round} from '@/util/util';
 import {loginOut, getChartList} from '@/request/request';
 export default {
     data() {
         return {
             chart: {},
-            legend: []
+            legend: [],
+            activeType: '-1'
         }
     },
     computed: {
         ...mapGetters(['userInfo'])
     },
     methods: {
+        round,
         ...mapActions(['getUserInfo']),
         toEdit() {
             this.$router.push('/user/edit');
@@ -59,7 +89,7 @@ export default {
             this.$router.push('/user/login');
         },
         async getChartList() {
-            const {code, msg, data} = await getChartList();
+            const {code, msg, data} = await getChartList({type: +this.activeType});
             if (code !== 0) {
                 return this.$message.error(msg);
             }
@@ -110,7 +140,6 @@ export default {
                 },
                 series: this.series
             };
-            this.chart = echart.init(document.getElementById('echart'));
             this.chart.setOption(this.option);
         },
         chartResize() {
@@ -120,6 +149,7 @@ export default {
     mounted() {
         this.getUserInfo();
         this.getChartList();
+        this.chart = echart.init(document.getElementById('echart'));
         window.addEventListener('resize', this.chartResize);
     },
     beforeDestroy() {
@@ -148,4 +178,27 @@ export default {
     .chart-contain
         width 100%
         height 400px
+    .amount-content
+        font-size 0
+        text-align center
+        .amount-box
+            overflow hidden
+            font-size 14px
+            display inline-block
+            border-radius 20px
+            height 200px
+            width 200px
+            box-shadow 0px 0px 10px #ccc
+            margin 20px 20px 0 0
+            &:hover
+                box-shadow 0px 0px 20px #ccc
+            text-align center
+            .amount-title
+                margin-top 20px
+            .amount-value-content
+                margin-top 50px
+                .amount-value
+                    font-size 20px
+                    font-weight 500
+
 </style>

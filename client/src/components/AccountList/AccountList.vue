@@ -1,5 +1,10 @@
 <template>
 <div class="account-list-wrap">
+    <el-tabs v-model="activeType" @tab-click="getList()">
+        <el-tab-pane label="全部资产" name="-1"></el-tab-pane>
+        <el-tab-pane label="流动资产" name="0"></el-tab-pane>
+        <el-tab-pane label="固定资产" name="1"></el-tab-pane>
+    </el-tabs>
     <el-button type="primary" @click="addAccountDetail">新增</el-button>
     <el-table
         :data="accountList"
@@ -25,10 +30,24 @@
             label="渠道"
             width="180">
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
             prop="detail"
             label="详情"
             width="180">
+        </el-table-column> -->
+        <el-table-column
+            prop="from"
+            label="来源"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            prop="type"
+            label="类型"
+            width="180"
+        >
+            <template slot-scope="scope">
+                {{typeOptions[scope.row.type]}}
+            </template>
         </el-table-column>
         <el-table-column
             prop="createTime"
@@ -57,12 +76,17 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
+import {fromOptions} from '@/constant/account';
 import {deleteDetail} from '@/request/request';
+import {typeOptions} from '@/constant/account';
+
 export default {
     data() {
         return {
             pn: 0,
-            rn: 0
+            rn: 0,
+            activeType: '-1',
+            typeOptions
         }
     },
     computed: {
@@ -71,7 +95,8 @@ export default {
             return (this.accountDetailInfo?.list || []).map(v => {
                 return {
                     ...v,
-                    createTime: new Date(v.create_date).toLocaleDateString()
+                    createTime: new Date(v.create_date).toLocaleDateString(),
+                    from: fromOptions[v.from]
                 }
             })
         }
@@ -93,7 +118,14 @@ export default {
                 type: 'success',
                 message: '删除成功'
             });
-            this.getAccountDetailList({pn: this.pn - 1, rn: 10});
+            this.getList();
+        },
+        getList() {
+            this.getAccountDetailList({
+                pn: this.pn - 1,
+                rn: 10,
+                type: this.activeType
+            });
         }
     },
     watch: {
@@ -101,7 +133,8 @@ export default {
             handler(v) {
                 this.getAccountDetailList({
                     pn: v - 1,
-                    rn: 10
+                    rn: 10,
+                    type: this.activeType
                 });
             }
         }
