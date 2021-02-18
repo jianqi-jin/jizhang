@@ -55,8 +55,6 @@ const router = new VueRouter({
         }]
     }, {
         path: '/',
-    }, {
-        path: '/',
         redirect: '/user'
     }]
 });
