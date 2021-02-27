@@ -60,3 +60,15 @@ export const editChannel = params => request('/interface/channel/edit', {
 export const deleteChannel = params => request('/interface/channel/delete', {
     params
 });
+
+export const getGoodList = params => request('/interface/good/getList', {params});
+export const addGood = params => request('/interface/good/add', {
+    params
+});
+export const editGood = params => request('/interface/good/edit', {
+    params
+});
+export const getGoodDetail = id => request(`/interface/good/getDetail?id=${id}`);
+export const deleteGood = params => request('/interface/good/delete', {
+    params
+});

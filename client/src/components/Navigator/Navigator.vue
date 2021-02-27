@@ -22,6 +22,14 @@
             </template>
             <el-menu-item index="/account/list">账单明细</el-menu-item>
         </el-submenu>
+        <el-submenu index="3">
+            <template slot="title">
+                <i class="el-icon-setting"></i>
+                <span slot="title">售卖</span>
+            </template>
+            <el-menu-item index="/sale/goodList">售卖商品</el-menu-item>
+            <el-menu-item index="/sale/saleList">售卖明细</el-menu-item>
+        </el-submenu>
         <el-menu-item index="3" disabled>
         <i class="el-icon-setting"></i>
         <span slot="title">笔记</span>

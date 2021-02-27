@@ -8,6 +8,13 @@ import UserRegister from '@/components/UserRegister/UserRegister.vue';
 import UserEdit from '@/components/UserEdit/UserEdit.vue';
 import Channel from '@/components/Channel/Channel.vue';
 import User from '@/components/User/User.vue';
+
+import Sale from '@/components/Sale/Sale.vue';
+import SaleGoodList from '@/components/SaleGoodList/SaleGoodList.vue';
+import SaleGoodDetail from '@/components/SaleGoodDetail/SaleGoodDetail.vue';
+import SaleList from '@/components/SaleList/SaleList.vue';
+import SaleDetail from '@/components/SaleDetail/SaleDetail.vue';
+
 import VueRouter from 'vue-router';
 
 const originPush = VueRouter.prototype.push;
@@ -52,6 +59,25 @@ const router = new VueRouter({
         }, {
             path: '/user',
             redirect: '/user/center'
+        }]
+    }, {
+        path: '/sale',
+        component: Sale,
+        children: [{
+            path: '/sale/goodList',
+            component: SaleGoodList
+        }, {
+            path: '/sale/goodDetail',
+            component: SaleGoodDetail
+        }, {
+            path: '/sale/saleList',
+            component: SaleList
+        }, {
+            path: '/sale/saleDetail',
+            component: SaleDetail
+        }, {
+            path: '/sale',
+            redirect: '/sale/good'
         }]
     }, {
         path: '/',

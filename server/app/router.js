@@ -19,4 +19,11 @@ module.exports = app => {
     router.get('/interface/user/login', controller.interface.user.login);
     router.get('/interface/user/loginout', controller.interface.user.loginout);
     router.get('/interface/bos/getBosToken', isLogin, controller.interface.bos.getBosToken);
+
+    // goods
+    router.get('/interface/good/getList', isLogin, controller.interface.good.getList);
+    router.get('/interface/good/edit', isLogin, controller.interface.good.edit);
+    router.get('/interface/good/delete', isLogin, controller.interface.good.delete);
+    router.get('/interface/good/add', isLogin, controller.interface.good.add);
+    router.get('/interface/good/getDetail', isLogin, controller.interface.good.getDetail);
 }
