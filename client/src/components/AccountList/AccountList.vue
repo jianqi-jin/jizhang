@@ -6,6 +6,7 @@
         <el-tab-pane label="固定资产" name="1"></el-tab-pane>
     </el-tabs>
     <el-button type="primary" @click="addAccountDetail">新增</el-button>
+    <el-button type="primary" @click="accountReconcil">对账</el-button>
     <el-table
         :data="accountList"
         style="width: 100%"
@@ -103,6 +104,9 @@ export default {
     },
     methods: {
         ...mapActions(['getAccountDetailList']),
+        accountReconcil() {
+            this.$router.push('/account/reconcil');
+        },
         addAccountDetail() {
             this.$router.push('/account/detail');
         },

@@ -5,6 +5,7 @@ module.exports = app => {
     // router.get('/news', controller.news.list);
     router.get('/interface/account/getDetailList', isLogin, controller.interface.account.getDetailList);
     router.get('/interface/account/add', isLogin, controller.interface.account.add);
+    router.get('/interface/account/reconcil', isLogin, controller.interface.account.reconcil);
     router.get('/interface/account/edit', isLogin, controller.interface.account.edit);
     router.get('/interface/account/delete', isLogin, controller.interface.account.delete);
     router.get('/interface/account/getDetail', isLogin, controller.interface.account.getDetail);
@@ -26,4 +27,5 @@ module.exports = app => {
     router.get('/interface/good/delete', isLogin, controller.interface.good.delete);
     router.get('/interface/good/add', isLogin, controller.interface.good.add);
     router.get('/interface/good/getDetail', isLogin, controller.interface.good.getDetail);
+    router.get('/interface/good/getGoodInfo', isLogin, controller.interface.good.getGoodInfo);
 }

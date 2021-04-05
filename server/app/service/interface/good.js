@@ -20,6 +20,15 @@ class AccountService extends Service {
         total
       }
     };
+    async getGoodInfo({userid}) {
+      let totalPrice = await this.app.mysql.query(
+        'select sum(price * total) as total_price from good where userid = ?',
+        [userid]
+      );
+      return {
+        data: totalPrice.length < 1 ? {} : totalPrice[0]
+      }
+    };
     async getDetail({userid, id}) {
       let list = await this.app.mysql.query(['select ',
       'id, title, description, content, img, total, saled_num, price, status, create_date',

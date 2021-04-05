@@ -14,6 +14,7 @@
         <el-tab-pane label="已上架" name="0"></el-tab-pane>
         <el-tab-pane label="已下架" name="1"></el-tab-pane>
     </el-tabs>
+    <h2>共计：{{totalPrice}}元</h2>
     <el-table
         :data="goodList"
         v-loading="loading"
@@ -107,7 +108,7 @@
 </template>
 
 <script>
-import {getGoodList, deleteGood} from '@/request/request.js';
+import {getGoodList, deleteGood, getGoodInfo} from '@/request/request.js';
 export default {
     data() {
         return {
@@ -120,7 +121,8 @@ export default {
             query: '',
             loading: false,
             activeType: '-1',
-            statusEnum: ['已上架', '已下架']
+            statusEnum: ['已上架', '已下架'],
+            totalPrice: 0
         };
     },
     watch: {
@@ -134,9 +136,17 @@ export default {
             immediate: true
         }
     },
+    mounted() {
+        this.getGoodInfo();
+    },
     methods: {
         goEdit(item) {
             this.$router.push(`/sale/goodDetail?id=${item.id}`);
+        },
+        getGoodInfo() {
+            getGoodInfo().then(res => {
+                this.totalPrice = res?.data?.total_price || 0;
+            });
         },
         getDate({pn = this.pn - 1, rn = 10, query = this.query.trim(), status = +this.activeType} = {}) {
             this.loading = true;

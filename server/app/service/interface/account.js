@@ -122,9 +122,9 @@ class AccountService extends Service {
     async getDetail({id}) {
       const detail = await this.app.mysql.get('account_detail', {
         id
-    });
-    return detail;
-  };
+      });
+      return detail;
+    };
     async add({
       userid,
       name,
@@ -142,6 +142,35 @@ class AccountService extends Service {
         detail,
         type,
         from
+      });
+      if (affectedRows !== 1) {
+        return ctx.body = {
+          code: -1,
+          msg: message
+        };
+      }
+      return await this.ctx.service.interface.user.updateAmount();
+    };
+
+    async reconcil({
+      userid,
+      price,
+      channel,
+      type
+    }) {
+      let currentPrice = await this.app.mysql.query([
+        'select sum(price) as current_price from account_detail',
+        ' where channel = ? and userid = ?'
+      ].join(''), [channel, userid]);
+      let calcPrice = price - currentPrice?.[0]?.current_price || 0;
+      let {affectedRows, message} = await this.app.mysql.insert('account_detail', {
+        userid,
+        name: '对账',
+        price: calcPrice,
+        channel,
+        detail: '',
+        type,
+        from: 2
       });
       if (affectedRows !== 1) {
         return ctx.body = {

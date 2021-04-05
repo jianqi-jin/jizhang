@@ -51,6 +51,25 @@ class DetailController extends Controller {
       };
     }
   };
+  async reconcil() {
+    const ctx = this.ctx;
+    const {price, channel, type} = ctx.query;
+    const {userInfo} = ctx.session;
+    try {
+      return ctx.body = await ctx.service.interface.account.reconcil({
+        userid: userInfo.userid,
+        price,
+        channel,
+        type
+      });
+    }
+    catch (e) {
+      return ctx.body = {
+        code: 15,
+        msg: e?.sqlMessage || '对账失败'
+      };
+    }
+  };
   async delete() {
     const {id} = this.ctx.query;
     this.ctx.body = await this.ctx.service.interface.account.delete({id});
@@ -77,7 +96,6 @@ class DetailController extends Controller {
       });
     }
     catch (e) {
-      console.log(e);
       return ctx.body = {
         code: 15,
         msg: e?.sqlMessage || '更改失败'

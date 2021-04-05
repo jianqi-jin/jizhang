@@ -60,10 +60,6 @@ export default {
             typeOptions: typeOptions.map((v, i) => ({
                 label: v,
                 value: i
-            })),
-            fromOptions: fromOptions.map((v, i) => ({
-                label: v,
-                value: i
             }))
         }
     },

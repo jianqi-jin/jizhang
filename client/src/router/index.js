@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import AccountDetail from '@/components/AccountDetail/AccountDetail.vue';
+import AccountReconcil from '@/components/AccountReconcil/AccountReconcil.vue';
 import AccountList from '@/components/AccountList/AccountList.vue';
 import Account from '@/components/Account/Account.vue';
 import UserCenter from '@/components/UserCenter/UserCenter.vue';
@@ -31,6 +32,9 @@ const router = new VueRouter({
         children: [{
             path: '/account/detail',
             component: AccountDetail
+        }, {
+            path: '/account/reconcil',
+            component: AccountReconcil
         }, {
             path: '/account/list',
             component: AccountList

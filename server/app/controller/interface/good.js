@@ -2,6 +2,17 @@
 const Controller = require('egg').Controller;
 
 class GoodController extends Controller {
+  async getGoodInfo() {
+    const ctx = this.ctx;
+    const {userInfo} = ctx.session;
+    const {data} = await ctx.service.interface.good.getGoodInfo({
+      userid: userInfo.userid
+    });
+    ctx.body = {
+      code: 0,
+      data
+    }
+  }
   async getList() {
     const ctx = this.ctx;
     const {

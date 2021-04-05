@@ -41,6 +41,9 @@ export const addAccountDetail = params => request('/interface/account/add', {
 export const editAccountDetail = params => request('/interface/account/edit', {
     params
 });
+export const accountReconcil = params => request('/interface/account/reconcil', {
+    params
+});
 export const editUserInfo = params => request('/interface/user/edit', {params});
 export const loginOut = () => request('/interface/user/loginout');
 export const getBosToken = params => request('/interface/bos/getBosToken', {
@@ -70,5 +73,8 @@ export const editGood = params => request('/interface/good/edit', {
 });
 export const getGoodDetail = id => request(`/interface/good/getDetail?id=${id}`);
 export const deleteGood = params => request('/interface/good/delete', {
+    params
+});
+export const getGoodInfo = params => request('/interface/good/getGoodInfo', {
     params
 });
