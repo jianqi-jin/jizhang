@@ -28,4 +28,12 @@ module.exports = app => {
     router.get('/interface/good/add', isLogin, controller.interface.good.add);
     router.get('/interface/good/getDetail', isLogin, controller.interface.good.getDetail);
     router.get('/interface/good/getGoodInfo', isLogin, controller.interface.good.getGoodInfo);
+
+    // sale
+    router.get('/interface/sale/getList', isLogin, controller.interface.sale.getList);
+    router.get('/interface/sale/edit', isLogin, controller.interface.sale.edit);
+    router.get('/interface/sale/delete', isLogin, controller.interface.sale.delete);
+    router.get('/interface/sale/add', isLogin, controller.interface.sale.add);
+    router.get('/interface/sale/getDetail', isLogin, controller.interface.sale.getDetail);
+    router.get('/interface/sale/getSaleInfo', isLogin, controller.interface.sale.getSaleInfo);
 }

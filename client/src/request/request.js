@@ -78,3 +78,5 @@ export const deleteGood = params => request('/interface/good/delete', {
 export const getGoodInfo = params => request('/interface/good/getGoodInfo', {
     params
 });
+
+export const getSaleList = params => request('/interface/sale/getList', {params});
