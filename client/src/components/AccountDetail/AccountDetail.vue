@@ -54,6 +54,7 @@ import {getAccountDetail, addAccountDetail, getChannelList, editAccountDetail} f
 export default {
     data() {
         return {
+            fromOptions,
             form: {},
             loading: false,
             channelOptions: [],

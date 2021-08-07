@@ -8,7 +8,7 @@ class AccountService extends Service {
       const count = await this.app.mysql.query([
         'select count(*) as total',
         'from sale_detail',
-        'INNER JOIN good',
+        'LEFT JOIN good',
         'ON sale_detail.goods_id = good.id',
         'where sale_detail.userid = ? and title like ? and sale_detail.status in (?)'
       ].join(' '), [userid, `%${query}%`, statuses]);
@@ -19,11 +19,12 @@ class AccountService extends Service {
         'sale_detail.price,',
         'sale_detail.total,',
         'sale_detail.description,',
-        'good.title',
+        'good.title,',
+        'sale_detail.goods_id',
         'FROM sale_detail',
-        'INNER JOIN good',
+        'LEFT JOIN good',
         'ON sale_detail.goods_id = good.id',
-        'where sale_detail.userid = ? and title like ? and sale_detail.status in (?) order by sale_detail.create_time desc limit ? offset ?'
+        'where sale_detail.userid = ? and IFNULL(title, "") like ? and sale_detail.status in (?) order by sale_detail.create_date desc limit ? offset ?'
       ].join(' '),
       [userid, `%${query}%`, statuses, rn, pn * rn]);
       list = list.map(v => {
@@ -55,20 +56,14 @@ class AccountService extends Service {
     };
     async add({
       userid,
-      title,
-      description,
-      content,
-      img,
+      goods_id,
       total,
       price,
       status
     }) {
       let {affectedRows, message} = await this.app.mysql.insert('sale_detail', {
         userid,
-        title,
-        description,
-        content,
-        img,
+        goods_id,
         total,
         price,
         status
@@ -109,22 +104,15 @@ class AccountService extends Service {
     async edit({
       id,
       userid,
-      title,
-      description,
-      content,
-      img,
+      // title,
+      goods_id,
       total,
-      price,
-      status
+      price
     }) {
       let {affectedRows, message} = await this.app.mysql.update('sale_detail', {
-        title,
-        description,
-        content,
-        img,
+        goods_id,
         total,
-        price,
-        status
+        price
       }, {
         where: {
           id,

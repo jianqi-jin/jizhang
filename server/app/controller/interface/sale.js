@@ -53,10 +53,8 @@ class SaleController extends Controller {
   async add() {
     const ctx = this.ctx;
     const {
+      goods_id,
       title,
-      description,
-      content,
-      img,
       total = 0,
       price,
       status = 0
@@ -65,10 +63,8 @@ class SaleController extends Controller {
     try {
       return ctx.body = await ctx.service.interface.sale.add({
         userid: userInfo.userid,
+        goods_id,
         title,
-        description,
-        content,
-        img,
         total,
         price,
         status
@@ -89,27 +85,21 @@ class SaleController extends Controller {
   async edit() {
     const ctx = this.ctx;
     const {
-      title,
-      description,
-      content,
-      img,
-      total,
-      price,
       id,
-      status
+      // userid,
+      // title,
+      goods_id,
+      total,
+      price
     } = ctx.query;
     const {userInfo} = ctx.session;
     try {
       return ctx.body = await ctx.service.interface.sale.edit({
         id,
         userid: userInfo.userid,
-        title,
-        description,
-        content,
-        img,
+        goods_id,
         total,
-        price,
-        status
+        price
       });
     }
     catch (e) {

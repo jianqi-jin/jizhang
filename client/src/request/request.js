@@ -71,11 +71,23 @@ export const addGood = params => request('/interface/good/add', {
 export const editGood = params => request('/interface/good/edit', {
     params
 });
+export const addSaleInfo = params => request('/interface/sale/add', {
+    params
+});
+export const updateSaleInfo = params => request('/interface/sale/edit', {
+    params
+});
 export const getGoodDetail = id => request(`/interface/good/getDetail?id=${id}`);
 export const deleteGood = params => request('/interface/good/delete', {
     params
 });
+export const deleteSale = params => request('/interface/sale/delete', {
+    params
+});
 export const getGoodInfo = params => request('/interface/good/getGoodInfo', {
+    params
+});
+export const getSaleInfo = params => request('/interface/sale/getSaleInfo', {
     params
 });
 
