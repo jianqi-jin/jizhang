@@ -15,6 +15,8 @@
         <el-tab-pane label="已下架" name="1"></el-tab-pane>
     </el-tabs>
     <h2>共计：{{totalPrice}}元</h2>
+    <h2>已卖：{{salePrice}}元</h2>
+    <h2>剩余：{{leftPrice}}元</h2>
     <el-table
         :data="goodList"
         v-loading="loading"
@@ -57,13 +59,13 @@
             prop="price"
             label="价格"
         ></el-table-column>
-        <el-table-column
+        <!-- <el-table-column
             prop="total"
             label="数量"
-        ></el-table-column>
+        ></el-table-column> -->
         <el-table-column
-            prop="saled_num"
-            label="卖出数量"
+            prop="left_num"
+            label="剩余数量"
         ></el-table-column>
         <el-table-column
             prop="status"
@@ -122,7 +124,9 @@ export default {
             loading: false,
             activeType: '-1',
             statusEnum: ['已上架', '已下架'],
-            totalPrice: 0
+            totalPrice: 0,
+            salePrice: 0,
+            leftPrice: 0
         };
     },
     watch: {
@@ -146,6 +150,8 @@ export default {
         getGoodInfo() {
             getGoodInfo().then(res => {
                 this.totalPrice = res?.data?.total_price || 0;
+                this.salePrice = res?.data?.sale_price || 0;
+                this.leftPrice = res?.data?.left_price || 0;
             });
         },
         getDate({pn = this.pn - 1, rn = 10, query = this.query.trim(), status = +this.activeType} = {}) {
@@ -186,6 +192,9 @@ export default {
 
 <style lang="stylus" scoped>
 .sale-goodlist-wrap
+    h2
+        display inline-block
+        margin-right 20px
     margin-top 20px
     .pagination-container
         text-align center

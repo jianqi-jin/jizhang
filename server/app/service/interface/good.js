@@ -8,8 +8,13 @@ class AccountService extends Service {
       const count = await this.app.mysql.query('select count(*) as total from good where userid = ? and title like ? and status in (?)', [userid, `%${query}%`, statuses]);
       const total = count?.[0]?.total || 0;
       let list = await this.app.mysql.query(['select ',
-      'id, title, description, content, img, total, saled_num, price, status, create_date',
-      ' from good where userid = ? and title like ? and status in (?) order by create_date desc, id desc limit ? offset ?'].join(''),
+      'good.id, good.title, good.description, good.content, good.img, good.total, good.saled_num, good.price, good.status, good.create_date, IFNULL(good.total - SUM(sale_detail.total), 0) as left_num',
+      ' from good',
+      ' left join sale_detail',
+      ' on good.id = sale_detail.goods_id',
+      ' where good.userid = ? and good.title like ? and good.status in (?)',
+      ' group by good.id',
+      ' order by good.create_date desc, good.id desc limit ? offset ?'].join(''),
       [userid, `%${query}%`, statuses, rn, pn * rn]);
       list = list.map(v => {
         v.create_date = new Date(v.create_date).getTime();
@@ -22,7 +27,30 @@ class AccountService extends Service {
     };
     async getGoodInfo({userid}) {
       let totalPrice = await this.app.mysql.query(
-        'select sum(price * total) as total_price from good where userid = ?',
+        `
+        select 
+          SUM(IFNULL(total * price,0)) as total_price,
+          SUM(IFNULL(sale_count,0)) as sale_price,
+          SUM(IFNULL(total * price - IFNULL(sale_count,0),0)) as left_price from 
+          (select
+            good.id,
+            good.title,
+            good.description,
+            good.content,
+            good.img,
+            good.total,
+            good.saled_num,
+            good.price,
+            good.status,
+            good.create_date,
+            SUM(sale_detail.price * sale_detail.total) as sale_count
+          from good
+          left join sale_detail
+          on good.id = sale_detail.goods_id
+          where good.userid = ?
+          GROUP BY good.id
+          )tmp
+        `,
         [userid]
       );
       return {
