@@ -1,5 +1,11 @@
 <template>
     <div class="sale-list-wrap">
+        <el-autocomplete
+            v-model="channelLabel"
+            :fetch-suggestions="handleChannelQueryAsync"
+            placeholder="请输入内容"
+            @select="selectedRow => handleChannelSelect(selectedRow)"
+        ></el-autocomplete>
         共计{{totalPrice}}元
         <el-button class="add-btn" @click="handleAdd">
             + 新增
@@ -18,6 +24,20 @@
                     @select="selectedRow => handleSelect(selectedRow, row)"
                 ></el-autocomplete>
                 <span v-else>{{row.title}}</span>
+            </template>
+        </el-table-column>
+        <el-table-column prop="title" label="渠道">
+            <template
+                slot-scope="{row}"
+            >
+                <el-autocomplete
+                    v-if="row.isEdit"
+                    v-model="row.channel_label"
+                    :fetch-suggestions="handleChannelQueryAsync"
+                    placeholder="请输入内容"
+                    @select="selectedRow => handleRowChannelSelect(selectedRow, row)"
+                ></el-autocomplete>
+                <span v-else>{{row.channel_label}}</span>
             </template>
         </el-table-column>
         <el-table-column prop="price" label="单价">
@@ -65,7 +85,15 @@
 </template>
 
 <script lang="ts">
-import { getSaleList, getGoodList, updateSaleInfo, addSaleInfo, getSaleInfo, deleteSale } from "@/request/request.js";
+import {
+    getSaleList,
+    getGoodList,
+    updateSaleInfo,
+    addSaleInfo,
+    getSaleInfo,
+    deleteSale,
+    getChannelList
+} from "@/request/request.js";
 export default {
     data() {
         return {
@@ -81,7 +109,10 @@ export default {
                 price: 0,
                 total: 1,
                 isEdit: true
-            }
+            },
+            channelLabel: '',
+            channelList: [],
+            channelInfo: {}
         };
     },
     watch: {
@@ -98,12 +129,22 @@ export default {
     },
     methods: {
         getSaleInfo() {
-            getSaleInfo().then(res => {
+            getSaleInfo({
+                channelId: this.channelInfo.id
+            }).then(res => {
                 this.totalPrice = res.data?.total_price || 0;
             })
         },
+        handleChannelSelect(row) {
+            this.channelInfo = row;
+            this.getSaleInfo();
+            this.getSaleList();
+        },
         handleSelect(selectedRow, row) {
             row.goods_id = selectedRow.id || row.goods_id;
+        },
+        handleRowChannelSelect(selectedRow, row) {
+            row.channel_id = selectedRow.id || row.channel_id;
         },
         editRow(row) {
             row.isEdit = true;
@@ -117,6 +158,7 @@ export default {
             else {
                 await updateSaleInfo(row);
             }
+            this.getSaleInfo();
             this.getSaleList();
         },
         deleteRow(row) {
@@ -136,8 +178,30 @@ export default {
                 });
             });
         },
+        handleChannelQueryAsync(query, cb) {
+            getChannelList({label: query}).then(res => {
+                if (res.code !== 0) {
+                    return this.$message.error('获取列表错误');
+                }
+                cb([{
+                    id: -1,
+                    value: '全部',
+                    address: '全部'
+                }, ...res.data.map(v => {
+                    v.value = v.label;
+                    v.address = v.id;
+                    return v;
+                })]);
+            }).catch(e => {
+                console.log(e);
+            });
+        },
         querySearchAsync(queryString, cb) {
-            getGoodList({pn: 0, rn: 10, query: queryString}).then(res => {
+            getGoodList({
+                pn: 0,
+                rn: 10,
+                query: queryString
+            }).then(res => {
                 if (res.code !== 0) {
                     return this.$message.error('获取列表错误');
                 }
@@ -160,6 +224,7 @@ export default {
             getSaleList({
                 pn: this.pn - 1,
                 rn: this.rn,
+                channelId: this.channelInfo.id
             }).then((res) => {
                 if (res.code !== 0) {
                     return this.$message.error('获取列表错误');

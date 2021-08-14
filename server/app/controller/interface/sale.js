@@ -4,9 +4,13 @@ const Controller = require('egg').Controller;
 class SaleController extends Controller {
   async getSaleInfo() {
     const ctx = this.ctx;
+    const {
+      channelId = -1
+    } = ctx.query;
     const {userInfo} = ctx.session;
     const {data} = await ctx.service.interface.sale.getSaleInfo({
-      userid: userInfo.userid
+      userid: userInfo.userid,
+      channelId
     });
     ctx.body = {
       code: 0,
@@ -19,7 +23,8 @@ class SaleController extends Controller {
       pn = 0,
       rn = 10,
       query = '',
-      status = -1
+      status = -1,
+      channelId = -1
     } = ctx.query;
     const {userInfo} = ctx.session;
     const {list, total} = await ctx.service.interface.sale.getList({
@@ -27,7 +32,8 @@ class SaleController extends Controller {
       pn,
       rn,
       query,
-      status
+      status,
+      channel_id: channelId || -1
     });
     ctx.body = {
       code: 0,
@@ -90,7 +96,8 @@ class SaleController extends Controller {
       // title,
       goods_id,
       total,
-      price
+      price,
+      channel_id = -1
     } = ctx.query;
     const {userInfo} = ctx.session;
     try {
@@ -99,7 +106,8 @@ class SaleController extends Controller {
         userid: userInfo.userid,
         goods_id,
         total,
-        price
+        price,
+        channel_id
       });
     }
     catch (e) {

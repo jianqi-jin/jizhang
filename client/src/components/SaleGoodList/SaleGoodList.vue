@@ -41,7 +41,7 @@
             prop="create_date"
             label="创建时间"
         ></el-table-column>
-        <el-table-column
+        <!-- <el-table-column
             prop="img"
             label="图片"
         >
@@ -54,7 +54,7 @@
                 >
                 </el-image>
             </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
             prop="price"
             label="价格"

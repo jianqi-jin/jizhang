@@ -4,9 +4,11 @@ const Controller = require('egg').Controller;
 class ChannelController extends Controller {
   async getList() {
     const ctx = this.ctx;
+    const {label} = ctx.query;
     const {userInfo} = ctx.session;
     const {list, total} = await ctx.service.interface.channel.getList({
-      userid: userInfo.userid
+      userid: userInfo.userid,
+      label: label || ''
     });
     ctx.body = {
       code: 0,

@@ -1,7 +1,8 @@
 const CHART_MAX_DAY = 3650;
 const Service = require('egg').Service;
 class AccountService extends Service {
-    async getList({userid, pn = 0, rn = 10, query = '', status = -1}) {
+    async getList({userid, pn = 0, rn = 10, query = '', status = -1, channel_id = -1}) {
+      channel_id = +channel_id;
       pn = +pn;
       rn = +rn;
       const statuses = +status === -1 ? [0, 1] : [+status];
@@ -10,8 +11,9 @@ class AccountService extends Service {
         'from sale_detail',
         'LEFT JOIN good',
         'ON sale_detail.goods_id = good.id',
-        'where sale_detail.userid = ? and title like ? and sale_detail.status in (?)'
-      ].join(' '), [userid, `%${query}%`, statuses]);
+        'where sale_detail.userid = ? and title like ? and sale_detail.status in (?)',
+        (channel_id !== -1 ? 'and channel_id = ?' : '')
+      ].join(' '), [userid, `%${query}%`, statuses, ...(channel_id !== -1 ? [channel_id] : [])]);
       const total = count?.[0]?.total || 0;
       let list = await this.app.mysql.query([
         'SELECT',
@@ -20,13 +22,21 @@ class AccountService extends Service {
         'sale_detail.total,',
         'sale_detail.description,',
         'good.title,',
+        'channel.label as channel_label,',
         'sale_detail.goods_id',
         'FROM sale_detail',
         'LEFT JOIN good',
         'ON sale_detail.goods_id = good.id',
-        'where sale_detail.userid = ? and IFNULL(title, "") like ? and sale_detail.status in (?) order by sale_detail.create_date desc limit ? offset ?'
+        'LEFT JOIN channel',
+        'ON sale_detail.channel_id = channel.id',
+        'where sale_detail.userid = ? and IFNULL(title, "") like ? and sale_detail.status in (?)',
+        (channel_id !== -1 ? 'and channel_id = ?' : ''),
+        'order by sale_detail.create_date desc limit ? offset ?'
       ].join(' '),
-      [userid, `%${query}%`, statuses, rn, pn * rn]);
+      [
+        userid, `%${query}%`, statuses,
+        ...(channel_id !== -1 ? [channel_id] : []),
+        rn, pn * rn]);
       list = list.map(v => {
         v.create_date = new Date(v.create_date).getTime();
         return v;
@@ -36,10 +46,18 @@ class AccountService extends Service {
         total
       }
     };
-    async getSaleInfo({userid}) {
+    async getSaleInfo({userid, channelId = -1}) {
+      channelId = +channelId;
       let totalPrice = await this.app.mysql.query(
-        'select sum(price * total) as total_price from sale_detail where userid = ?',
-        [userid]
+        [
+          'select sum(price * total) as total_price from sale_detail',
+          'where userid = ?',
+          ...(channelId !== -1 ? ['and channel_id = ?'] : [])
+        ].join(' '),
+        [
+          userid,
+          ...(channelId !== -1 ? [channelId] : [])
+        ]
       );
       return {
         data: totalPrice.length < 1 ? {} : totalPrice[0]
@@ -107,12 +125,14 @@ class AccountService extends Service {
       // title,
       goods_id,
       total,
-      price
+      price,
+      channel_id = -1
     }) {
       let {affectedRows, message} = await this.app.mysql.update('sale_detail', {
         goods_id,
         total,
-        price
+        price,
+        channel_id
       }, {
         where: {
           id,

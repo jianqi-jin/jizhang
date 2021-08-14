@@ -53,7 +53,9 @@ export const getChartList = params => request('/interface/account/getChartList',
 export const deleteDetail = params => request('/interface/account/delete', {
     params
 });
-export const getChannelList = () => request('/interface/channel/getList');
+export const getChannelList = params => request('/interface/channel/getList', {
+    params
+});
 export const addChannel = params => request('/interface/channel/add', {
     params
 });
