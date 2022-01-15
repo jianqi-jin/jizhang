@@ -14,7 +14,7 @@ class AccountService extends Service {
         'where sale_detail.userid = ? and title like ? and sale_detail.status in (?)',
         (channel_id !== -1 ? 'and channel_id = ?' : '')
       ].join(' '), [userid, `%${query}%`, statuses, ...(channel_id !== -1 ? [channel_id] : [])]);
-      const total = count?.[0]?.total || 0;
+      const total = count[0].total || 0;
       let list = await this.app.mysql.query([
         'SELECT',
         'sale_detail.id,',

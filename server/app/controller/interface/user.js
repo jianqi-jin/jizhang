@@ -4,7 +4,7 @@ const Controller = require('egg').Controller;
 class UserController extends Controller {
   async getUserInfo() {
     const ctx = this.ctx;
-    const userid = ctx.session?.userInfo?.userid;
+    const userid = ctx.session.userInfo.userid;
     if (!userid) {
       return ctx.body = {
         code: -1,
@@ -78,7 +78,7 @@ class UserController extends Controller {
     catch (e) {
       return ctx.body = {
         code: 15,
-        msg: e?.sqlMessage || '更改失败'
+        msg: e.sqlMessage || '更改失败'
       };
     }
   };

@@ -47,7 +47,7 @@ class DetailController extends Controller {
     catch (e) {
       return ctx.body = {
         code: 15,
-        msg: e?.sqlMessage || '添加失败'
+        msg: e.sqlMessage || '添加失败'
       };
     }
   };
@@ -66,7 +66,7 @@ class DetailController extends Controller {
     catch (e) {
       return ctx.body = {
         code: 15,
-        msg: e?.sqlMessage || '对账失败'
+        msg: e.sqlMessage || '对账失败'
       };
     }
   };
@@ -98,7 +98,7 @@ class DetailController extends Controller {
     catch (e) {
       return ctx.body = {
         code: 15,
-        msg: e?.sqlMessage || '更改失败'
+        msg: e.sqlMessage || '更改失败'
       };
     }
   };

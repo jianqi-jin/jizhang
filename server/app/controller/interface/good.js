@@ -77,7 +77,7 @@ class GoodController extends Controller {
     catch (e) {
       return ctx.body = {
         code: 15,
-        msg: e?.sqlMessage || '添加失败'
+        msg: e.sqlMessage || '添加失败'
       };
     }
   };
@@ -116,7 +116,7 @@ class GoodController extends Controller {
       console.log(e);
       return ctx.body = {
         code: 15,
-        msg: e?.sqlMessage || '更改失败'
+        msg: e.sqlMessage || '更改失败'
       };
     }
   };

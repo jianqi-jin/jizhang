@@ -4,7 +4,7 @@ class AccountService extends Service {
     async getDetailList({pn = 0, rn = 10, userid, type = -1}) {
       const types = type === 0 || type === 1 ? [type] : [0, 1];
       const count = await this.app.mysql.query('select count(*) as total from account_detail where userid = ? and type in (?)', [userid, types]);
-      const total = count?.[0]?.total || 0;
+      const total = count[0].total || 0;
       let detailList = await this.app.mysql.query('select * from account_detail where userid = ? and type in (?) order by create_date desc, id desc limit ? offset ?',
       [userid, types, Math.max(rn, 0), Math.max(pn * rn, 0)]);
       detailList = detailList.map(v => {
@@ -20,14 +20,14 @@ class AccountService extends Service {
     async getChartList({start, end, type = -1} = {}) {
       try {
         const dayTime = 1e3 * 60 * 60 * 24;
-        start = +start || new Date(this.ctx.session?.userInfo?.date).getTime();
+        start = +start || new Date(this.ctx.session.userInfo.date).getTime();
         end = (+end || new Date().getTime()) + dayTime;
         let xAxis = [];
         for (let i = start; i < end; i += dayTime) {
           xAxis.push(new Date(i - dayTime).toLocaleDateString());
         }
         // 结束日期加一
-        const {userid} = this.ctx.session?.userInfo || {};
+        const {userid} = this.ctx.session.userInfo || {};
         const rows = await this.app.mysql.query(
           'select channel, price, type, `from`, create_date from account_detail where create_date>? and create_date<? and userid=? order by create_date asc',
           [new Date(+start), new Date(+end), userid]
@@ -86,7 +86,7 @@ class AccountService extends Service {
             let total = 0;
             for (let cur = i; cur < length; ++cur) {
               const current = dataList[cur];
-              if (current?.time < date) {
+              if (current.time < date) {
                 total += current.price;
               }
             }
@@ -162,7 +162,7 @@ class AccountService extends Service {
         'select sum(price) as current_price from account_detail',
         ' where channel = ? and userid = ?'
       ].join(''), [channel, userid]);
-      let calcPrice = price - currentPrice?.[0]?.current_price || 0;
+      let calcPrice = price - currentPrice[0].current_price || 0;
       let {affectedRows, message} = await this.app.mysql.insert('account_detail', {
         userid,
         name: '对账',

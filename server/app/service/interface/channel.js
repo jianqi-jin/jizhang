@@ -3,7 +3,7 @@ const Service = require('egg').Service;
 class AccountService extends Service {
     async getList({userid, label = ''}) {
       const count = await this.app.mysql.query('select count(*) as total from channel where userid = ?', [userid]);
-      const total = count?.[0]?.total || 0;
+      const total = count[0].total || 0;
       let list = await this.app.mysql.query('select id, label, enable, create_date from channel where userid = ? and label like ? order by create_date desc, id desc',
       [userid, `%${label}%`]);
       list = list.map(v => {

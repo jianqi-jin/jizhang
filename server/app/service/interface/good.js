@@ -6,7 +6,7 @@ class AccountService extends Service {
       rn = +rn;
       const statuses = +status === -1 ? [0, 1] : [+status];
       const count = await this.app.mysql.query('select count(*) as total from good where userid = ? and title like ? and status in (?)', [userid, `%${query}%`, statuses]);
-      const total = count?.[0]?.total || 0;
+      const total = count[0].total || 0;
       let list = await this.app.mysql.query(['select ',
       'good.id, good.title, good.description, good.content, good.img, good.total, good.saled_num, good.price, good.status, good.create_date, IFNULL(good.total - SUM(IFNULL(sale_detail.total, 0)), 0) as left_num',
       ' from good',
