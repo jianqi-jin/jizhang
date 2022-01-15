@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "egg-bin dev",
-    "start": "egg-scripts start --daemon --port=3000",
+    "start": "egg-scripts start --daemon --port=9000",
     "stop": "egg-scripts stop"
   },
   "author": "",
@@ -20,10 +20,10 @@
     "egg-view-nunjucks": "^2.3.0",
     "koa-compress": "^5.0.1",
     "mysql": "^2.18.1",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "egg": "^2.29.1"
   },
   "devDependencies": {
-    "egg": "^2.29.1",
     "egg-bin": "^4.15.0"
   }
 }
